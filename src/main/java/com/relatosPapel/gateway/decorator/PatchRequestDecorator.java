@@ -2,8 +2,8 @@ package com.relatosPapel.gateway.decorator;
 
 import com.relatosPapel.gateway.model.GatewayRequest;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,16 +13,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import tools.jackson.databind.ObjectMapper;
 
-import org.springframework.core.io.buffer.DataBuffer;
 import java.net.URI;
 
-@Slf4j
-public class PutRequestDecorator extends ServerHttpRequestDecorator {
+public class PatchRequestDecorator extends ServerHttpRequestDecorator {
 
     private final GatewayRequest gatewayRequest;
     private final ObjectMapper objectMapper;
 
-    public PutRequestDecorator (GatewayRequest gatewayRequest, ObjectMapper objectMapper) {
+    public PatchRequestDecorator (GatewayRequest gatewayRequest, ObjectMapper objectMapper) {
         super(gatewayRequest.getExchange().getRequest());
         this.gatewayRequest = gatewayRequest;
         this.objectMapper = objectMapper;
@@ -31,7 +29,7 @@ public class PutRequestDecorator extends ServerHttpRequestDecorator {
     @Override
     @NonNull
     public HttpMethod getMethod() {
-        return HttpMethod.PUT;
+        return HttpMethod.PATCH;
     }
 
     @Override
@@ -59,5 +57,4 @@ public class PutRequestDecorator extends ServerHttpRequestDecorator {
         buffer.write(bodyData);
         return Flux.just(buffer);
     }
-
 }
