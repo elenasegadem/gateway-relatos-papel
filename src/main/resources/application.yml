@@ -9,10 +9,8 @@ eureka:
         registerWithEureka: true
         fetchRegistry: true
         serviceUrl:
-            defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+    defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
 spring:
-    application:
-        name: gateway
     cloud:
         gateway:
             server:
@@ -26,10 +24,11 @@ spring:
                     globalcors:
                         cors-configurations:
                             '[/**]':
-                            allowedOrigins: ${ALLOWED_ORIGINS:*}
-                            allowedHeaders: "*"
-                            allowedMethods:
-                                - POST
+                                allowedOrigins: ${ALLOWED_ORIGINS:*}
+                                allowedHeaders: "*"
+                                allowedMethods:
+                                    - POST
+
 management:
     endpoint:
         gateway:
