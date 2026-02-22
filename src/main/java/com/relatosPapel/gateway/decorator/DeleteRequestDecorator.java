@@ -24,7 +24,7 @@ public class DeleteRequestDecorator extends ServerHttpRequestDecorator {
     @Override
     @NonNull
     public HttpMethod getMethod() {
-        return HttpMethod.GET;
+        return HttpMethod.DELETE;
     }
 
     @Override
