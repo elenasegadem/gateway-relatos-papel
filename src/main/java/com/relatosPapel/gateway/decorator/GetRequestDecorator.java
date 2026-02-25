@@ -8,10 +8,14 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public class GetRequestDecorator extends ServerHttpRequestDecorator {
@@ -34,7 +38,7 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
     public URI getURI() {
         return UriComponentsBuilder
                 .fromUri((URI) gatewayRequest.getExchange().getAttributes().get(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR))
-                .queryParams(gatewayRequest.getQueryParams())
+                .queryParams(gatewayRequest.toMultiValueQueryParams())
                 .build()
                 .toUri();
     }
@@ -49,5 +53,20 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
     @NonNull
     public Flux<DataBuffer> getBody() {
         return Flux.empty();
+    }
+
+
+    private MultiValueMap<String, String> toQueryParams(MultiValueMap<String, String> in) {
+        LinkedMultiValueMap<String, String> out = new LinkedMultiValueMap<>();
+        if (in == null) return out;
+
+        in.forEach((key, values) -> {
+            if (key == null || values == null) return;
+            values.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(v -> out.add(key, v));
+        });
+
+        return out;
     }
 }
